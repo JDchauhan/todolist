@@ -7,7 +7,7 @@ module.exports.verify = (userType, req, res, next) => {
     console.log(userType)
 
     var token = req.headers.authorization || req.params.token;
-    token = token.split(" ")[1]
+    token = token && token.length? token.split(" ")[1] : undefined 
     console.log(token)
     if (!token) {
         let error = new Error()

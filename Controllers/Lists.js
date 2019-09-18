@@ -84,11 +84,37 @@ module.exports.list = function (req, res, next) {
     }
 }
 
+module.exports.get = function (req, res, next) {
+    try {
+        Lists.findOne({ 
+            user: req.user._id,
+            _id: req.params.id 
+        },
+            function (err, list) {
+                if (err) {
+                    return next(err);
+                }
+
+                if (!list) {
+                    let error = new Error()
+                    error.code = 404
+                    return next(error)
+                }
+
+                return Utils.Responses.successMsg(req, res, list);
+
+            });
+
+    } catch (err) {
+        return next(err);
+    }
+}
+
 module.exports.remove = function (req, res, next) {
     try {
 
         Lists.findOneAndRemove({
-            _id: req.body._id,
+            _id: req.params.id,
             user: req.user._id
         }, function (err, todo) {
             if (err) {

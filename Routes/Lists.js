@@ -17,6 +17,9 @@ module.exports = function (app) {
     app.get("/todo" , (req, res, next) => {next(["user"], ...arguments)}, Utils.Auth.verify,
         Controllers.Lists.list);
 
+    app.get("/todo/:id" , (req, res, next) => {next(["user"], ...arguments)}, Utils.Auth.verify,
+        Controllers.Lists.get);
+
     app.post("/todo" , (req, res, next) => {next(["user"], ...arguments)}, Utils.Auth.verify, 
         Validator.body(Joi.object({
             date: Joi.date().required(),
@@ -27,13 +30,14 @@ module.exports = function (app) {
 
     app.put("/todo" , (req, res, next) => {next(["user"], ...arguments)}, Utils.Auth.verify, 
         Validator.body(Joi.object({
+            _id: Joi.string().trim().required(),
             date: Joi.date().optional(),
             title: Joi.string().trim().max(50).optional(),
             status: Joi.string().alphanum().valid(["todo", "inprogress", "done"]).optional()
         })), 
         Controllers.Lists.update);
 
-    app.delete("/todo" , (req, res, next) => {next(["user"], ...arguments)}, Utils.Auth.verify,
-        Controllers.Lists.list);
+    app.delete("/todo/:id" , (req, res, next) => {next(["user"], ...arguments)}, Utils.Auth.verify,
+        Controllers.Lists.remove);
 
 };
